@@ -1,0 +1,22 @@
+hash: abce87c83a230a880b0e5e9055de51fca62c11a28f8af73c20fe574decf81625
+updated: 2018-08-18T13:17:39.1666068-05:00
+imports:
+- name: github.com/resin-os/circbuf
+  version: 56e73111d0b216a0157b0122dbba22a6bcaba395
+- name: github.com/Sirupsen/logrus
+  version: 3e01752db0189b9157070a0e1668a620f9a85da2
+- name: github.com/urfave/cli
+  version: cfb38830724cc34fedffe9a2a29fb54fa9169cd1
+- name: golang.org/x/crypto
+  version: aabede6cba87e37f413b3e60ebfc214f8eeca1b0
+  subpackages:
+  - blake2b
+  - md4
+  - ssh/terminal
+- name: golang.org/x/sys
+  version: 1c9583448a9c3aa0f9a6a5241bf73c0bd8aafded
+  subpackages:
+  - cpu
+  - unix
+  - windows
+testImports: []
