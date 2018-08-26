@@ -1,17 +1,18 @@
 package main
 
 import (
-	"os"
 	_ "io/ioutil"
+	"os"
+
+	"github.com/kelbyers/librsync-go"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/urfave/cli"
-	"github.com/resin-os/librsync-go"
 )
 
 func CommandPatch(c *cli.Context) {
 	if len(c.Args()) > 3 {
-		logrus.Warnf("%d additional arguments passed are ignored", len(c.Args()) - 2)
+		logrus.Warnf("%d additional arguments passed are ignored", len(c.Args())-2)
 	}
 
 	if c.Args().Get(0) == "" {
