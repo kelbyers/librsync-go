@@ -251,7 +251,7 @@ func BenchmarkRollsum_RollinComplete(b *testing.B) {
 	benchRollsum = r
 }
 
-func benchmarkRollsum_Rollout(count int, b *testing.B) {
+func benchmarkRollsumRollout(count int, b *testing.B) {
 	r := NewRollsum()
 	r.count = uint64(count)
 	p := makeByteSlice(count)
@@ -263,11 +263,11 @@ func benchmarkRollsum_Rollout(count int, b *testing.B) {
 	}
 }
 
-func BenchmarkRollsum_Rollout1(b *testing.B)   { benchmarkRollsum_Rollout(1, b) }
-func BenchmarkRollsum_Rollout2(b *testing.B)   { benchmarkRollsum_Rollout(2, b) }
-func BenchmarkRollsum_Rollout5(b *testing.B)   { benchmarkRollsum_Rollout(5, b) }
-func BenchmarkRollsum_Rollout10(b *testing.B)  { benchmarkRollsum_Rollout(10, b) }
-func BenchmarkRollsum_Rollout256(b *testing.B) { benchmarkRollsum_Rollout(256, b) }
+func BenchmarkRollsum_Rollout1(b *testing.B)   { benchmarkRollsumRollout(1, b) }
+func BenchmarkRollsum_Rollout2(b *testing.B)   { benchmarkRollsumRollout(2, b) }
+func BenchmarkRollsum_Rollout5(b *testing.B)   { benchmarkRollsumRollout(5, b) }
+func BenchmarkRollsum_Rollout10(b *testing.B)  { benchmarkRollsumRollout(10, b) }
+func BenchmarkRollsum_Rollout256(b *testing.B) { benchmarkRollsumRollout(256, b) }
 
 func BenchmarkRollsum_RolloutComplete(b *testing.B) {
 	r := NewRollsum()
@@ -281,4 +281,15 @@ func BenchmarkRollsum_RolloutComplete(b *testing.B) {
 		}
 	}
 	benchRollsum = r
+}
+
+var benchDigest uint32
+
+func BenchmarkRollsum_DigestComplete(b *testing.B) {
+	var d uint32
+	rollsum := Rollsum{s1: uint16(1111), s2: uint16(2222)}
+	for n := 0; n < b.N; n++ {
+		d = rollsum.Digest()
+	}
+	benchDigest = d
 }
