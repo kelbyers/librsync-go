@@ -190,7 +190,7 @@ func TestRollsum_Reset(t *testing.T) {
 	}
 }
 
-func benchmarkRollsum_Update(count int, b *testing.B) {
+func benchmarkRollsumUpdate(count int, b *testing.B) {
 	r := Rollsum{}
 	p := makeByteSlice(count)
 	for n := 0; n < b.N; n++ {
@@ -207,8 +207,8 @@ func makeByteSlice(count int) []byte {
 	return p
 }
 
-func BenchmarkRollsum_Update256(b *testing.B)  { benchmarkRollsum_Update(256, b) }
-func BenchmarkRollsum_Update1024(b *testing.B) { benchmarkRollsum_Update(1024, b) }
+func BenchmarkRollsum_Update256(b *testing.B)  { benchmarkRollsumUpdate(256, b) }
+func BenchmarkRollsum_Update1024(b *testing.B) { benchmarkRollsumUpdate(1024, b) }
 
 var benchRollsum Rollsum
 
@@ -222,7 +222,7 @@ func BenchmarkRollsum_UpdateComplete(b *testing.B) {
 	benchRollsum = r
 }
 
-func benchmarkRollsum_Rollin(count int, b *testing.B) {
+func benchmarkRollsumRollin(count int, b *testing.B) {
 	r := NewRollsum()
 	p := makeByteSlice(count)
 	for n := 0; n < b.N; n++ {
@@ -233,11 +233,11 @@ func benchmarkRollsum_Rollin(count int, b *testing.B) {
 	}
 }
 
-func BenchmarkRollsum_Rollin1(b *testing.B)   { benchmarkRollsum_Rollin(1, b) }
-func BenchmarkRollsum_Rollin2(b *testing.B)   { benchmarkRollsum_Rollin(2, b) }
-func BenchmarkRollsum_Rollin5(b *testing.B)   { benchmarkRollsum_Rollin(5, b) }
-func BenchmarkRollsum_Rollin10(b *testing.B)  { benchmarkRollsum_Rollin(10, b) }
-func BenchmarkRollsum_Rollin256(b *testing.B) { benchmarkRollsum_Rollin(256, b) }
+func BenchmarkRollsum_Rollin1(b *testing.B)   { benchmarkRollsumRollin(1, b) }
+func BenchmarkRollsum_Rollin2(b *testing.B)   { benchmarkRollsumRollin(2, b) }
+func BenchmarkRollsum_Rollin5(b *testing.B)   { benchmarkRollsumRollin(5, b) }
+func BenchmarkRollsum_Rollin10(b *testing.B)  { benchmarkRollsumRollin(10, b) }
+func BenchmarkRollsum_Rollin256(b *testing.B) { benchmarkRollsumRollin(256, b) }
 
 func BenchmarkRollsum_RollinComplete(b *testing.B) {
 	r := NewRollsum()

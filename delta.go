@@ -9,6 +9,9 @@ import (
 	"github.com/resin-os/circbuf"
 )
 
+// Delta generates the plan for patching the remote file represented by
+// signature `sig`, based on the contents of the local source-of-truth `i`. The
+// delta is written to `output`.
 func Delta(sig *SignatureType, i io.Reader, output io.Writer) error {
 	input := bufio.NewReader(i)
 
@@ -21,12 +24,12 @@ func Delta(sig *SignatureType, i io.Reader, output io.Writer) error {
 	m := match{output: output}
 
 	weakSum := NewRollsum()
-	block, _ := circbuf.NewBuffer(int64(sig.blockLen))
+	block, _ := circbuf.NewBuffer(int64(sig.BlockLen))
 	block.WriteByte(0)
 	pos := 0
 
 	for {
-		pos += 1
+		pos++
 		in, err := input.ReadByte()
 		if err == io.EOF {
 			break
@@ -43,11 +46,11 @@ func Delta(sig *SignatureType, i io.Reader, output io.Writer) error {
 		block.WriteByte(in)
 		weakSum.Rollin(in)
 
-		if weakSum.count < uint64(sig.blockLen) {
+		if weakSum.count < uint64(sig.BlockLen) {
 			continue
 		}
 
-		if weakSum.count > uint64(sig.blockLen) {
+		if weakSum.count > uint64(sig.BlockLen) {
 			err := m.add(MATCH_KIND_LITERAL, uint64(prevByte), 1)
 			if err != nil {
 				return err
@@ -55,14 +58,17 @@ func Delta(sig *SignatureType, i io.Reader, output io.Writer) error {
 			weakSum.Rollout(prevByte)
 		}
 
-		if blockIdx, ok := sig.weak2block[weakSum.Digest()]; ok {
-			strong2, _ := CalcStrongSum(block.Bytes(), sig.sigType, sig.strongLen)
-			if bytes.Equal(sig.strongSigs[blockIdx], strong2) {
-				weakSum.Reset()
-				block.Reset()
-				err := m.add(MATCH_KIND_COPY, uint64(blockIdx)*uint64(sig.blockLen), uint64(sig.blockLen))
-				if err != nil {
-					return err
+		weakIdx := weakSum.Digest()
+		if strongHashes, ok := sig.Weak2block.Get(weakIdx); ok {
+			strong2, _ := CalcStrongSum(block.Bytes(), sig.SigType, sig.StrongLen)
+			if blockIdx, ok := strongHashes.Get(strong2); ok {
+				if bytes.Equal(sig.StrongSigs[blockIdx], strong2) {
+					weakSum.Reset()
+					block.Reset()
+					err := m.add(MATCH_KIND_COPY, uint64(blockIdx)*uint64(sig.BlockLen), uint64(sig.BlockLen))
+					if err != nil {
+						return err
+					}
 				}
 			}
 		}
