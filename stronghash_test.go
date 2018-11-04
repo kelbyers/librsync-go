@@ -87,3 +87,55 @@ func Test_newStrongMap(t *testing.T) {
 		})
 	}
 }
+
+func TestStrongSignatureHashMapExtremes(t *testing.T) {
+	low32 := make([]byte, 32)
+	for i := 0; i < 32; i++ {
+		low32[i] = byte(i)
+	}
+	high32 := make([]byte, 32)
+	for i := 0; i < 32; i++ {
+		high32[i] = byte(0xff - i)
+	}
+	tests := []struct {
+		name  string
+		key   []byte
+		value int
+	}{
+		{name: "low", key: low32, value: 2468},
+		{name: "high", key: high32, value: 1357},
+		{name: "nihongo", key: []byte(`日本語`), value: 32763},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert := assert.New(t)
+			tKey := []byte(`1234`)
+			tValue := 1234
+
+			m := newStrongMap()
+			m.Set(tKey, tValue)
+			m.Set(tt.key, tt.value)
+
+			tGot, ok := m.Get(tKey)
+			assert.True(ok, "tKey in hashmap")
+			assert.Equal(tValue, tGot, "hashmap[tKey] == tValue")
+
+			ttGot, ok := m.Get(tt.key)
+			assert.True(ok, "tt.key in hashmap")
+			assert.Equal(tt.value, ttGot, "hashmap[tt.key] == tt.value")
+
+			nKey := append([]byte{}, tKey...)
+			nKey = append(nKey, tt.key...)
+			_, ok = m.Get(nKey)
+			assert.False(ok, "key should not be found")
+
+			for k, v := range m.Strong {
+				bk := []byte(k)
+				assert.Contains([][]byte{tKey, tt.key}, bk, "string key maps back to []byte")
+				bv, ok := m.Get(bk)
+				assert.True(ok, "Get finds bk")
+				assert.Equal(v, bv, "Get finds correct bk")
+			}
+		})
+	}
+}
