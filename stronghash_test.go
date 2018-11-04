@@ -62,7 +62,6 @@ func TestStrongSignatureHashMap_Set(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.h.Set(tt.args.k, tt.args.l)
-			// assert.Equal(t, tt.args.l, tt.h.Strong[tt.args.k])
 			got, _ := tt.h.Get(tt.args.k)
 			assert.Equal(t, tt.args.l, got)
 		})
