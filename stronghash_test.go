@@ -23,13 +23,13 @@ func TestStrongSignatureHashMap_Get(t *testing.T) {
 	}{
 		{
 			name: "ok",
-			h:    &StrongSignatureHashMap{Strong: map[uintptr]int{strongKey: 1234}},
+			h:    &StrongSignatureHashMap{Strong: map[string]int{strongKey: 1234}},
 			args: args{k: strongSig},
 			want: 1234, want1: true,
 		},
 		{
 			name: "not found",
-			h:    &StrongSignatureHashMap{Strong: map[uintptr]int{strongKey: 1234}},
+			h:    &StrongSignatureHashMap{Strong: map[string]int{strongKey: 1234}},
 			args: args{k: []byte(`wrongway`)},
 			want: 0, want1: false,
 		},
@@ -46,9 +46,10 @@ func TestStrongSignatureHashMap_Get(t *testing.T) {
 		})
 	}
 }
+
 func TestStrongSignatureHashMap_Set(t *testing.T) {
 	type args struct {
-		k uintptr
+		k string
 		l int
 	}
 	tests := []struct {
@@ -56,7 +57,7 @@ func TestStrongSignatureHashMap_Set(t *testing.T) {
 		h    StrongSignatureHashMap
 		args args
 	}{
-		{name: "ok", h: newStrongMap(), args: args{k: 1234, l: 5678}},
+		{name: "ok", h: newStrongMap(), args: args{k: "1234", l: 5678}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -65,13 +66,14 @@ func TestStrongSignatureHashMap_Set(t *testing.T) {
 		})
 	}
 }
+
 func Test_newStrongMap(t *testing.T) {
 	tests := []struct {
 		name string
 		want StrongSignatureHashMap
 	}{
 		{name: "ok",
-			want: StrongSignatureHashMap{Strong: map[uintptr]int{}}},
+			want: StrongSignatureHashMap{Strong: map[string]int{}}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -80,7 +82,7 @@ func Test_newStrongMap(t *testing.T) {
 				t.Errorf("newStrongMap() = %v, want %v", got, tt.want)
 			}
 			// make sure the internal map is not a nil map
-			got.Strong[1234] = 5678
+			got.Strong["1234"] = 5678
 		})
 	}
 }

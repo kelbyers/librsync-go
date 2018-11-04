@@ -9,7 +9,7 @@ import (
 
 func TestSignatureHashMap_Get(t *testing.T) {
 	strong1 := StrongSignatureHashMap{
-		Strong: map[uintptr]int{uintptr(1234): 5678},
+		Strong: map[string]int{string(1234): 5678},
 	}
 	type args struct {
 		k uint32
@@ -89,7 +89,7 @@ func TestSignatureHashMap_UpdateBlock(t *testing.T) {
 			name: "existing",
 			h: SignatureHashMap{Weak: map[uint32]StrongSignatureHashMap{
 				1234: StrongSignatureHashMap{
-					Strong: map[uintptr]int{block2hash([]byte(`oneitem`)): 9876},
+					Strong: map[string]int{block2hash([]byte(`oneitem`)): 9876},
 				}}},
 			size: 2,
 		},
