@@ -49,7 +49,7 @@ func TestStrongSignatureHashMap_Get(t *testing.T) {
 
 func TestStrongSignatureHashMap_Set(t *testing.T) {
 	type args struct {
-		k string
+		k []byte
 		l int
 	}
 	tests := []struct {
@@ -57,12 +57,14 @@ func TestStrongSignatureHashMap_Set(t *testing.T) {
 		h    StrongSignatureHashMap
 		args args
 	}{
-		{name: "ok", h: newStrongMap(), args: args{k: "1234", l: 5678}},
+		{name: "ok", h: newStrongMap(), args: args{k: []byte(`something new`), l: 5678}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.h.Set(tt.args.k, tt.args.l)
-			assert.Equal(t, tt.args.l, tt.h.Strong[tt.args.k])
+			// assert.Equal(t, tt.args.l, tt.h.Strong[tt.args.k])
+			got, _ := tt.h.Get(tt.args.k)
+			assert.Equal(t, tt.args.l, got)
 		})
 	}
 }

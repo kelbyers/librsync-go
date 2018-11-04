@@ -23,8 +23,9 @@ func (h *StrongSignatureHashMap) Get(k []byte) (int, bool) {
 }
 
 // Set stores the position `l` for the block with strong checksum `k`
-func (h *StrongSignatureHashMap) Set(k string, l int) {
-	h.Strong[k] = l
+func (h *StrongSignatureHashMap) Set(k []byte, l int) {
+	key := block2hash(k)
+	h.Strong[key] = l
 }
 
 // newStrongMap properly initializes a new StrongSignatureHashMap so that it can

@@ -26,13 +26,12 @@ func (h *SignatureHashMap) Set(k uint32, v StrongSignatureHashMap) {
 // UpdateBlock adds the signature mappings for the data block at position
 // `l`, having weak checkum `w` and strong checksum `s`.
 func (h *SignatureHashMap) UpdateBlock(w uint32, s []byte, l int) {
-	key := block2hash(s)
 	st, ok := h.Get(w)
 	if !ok {
 		st = newStrongMap()
 		h.Set(w, st)
 	}
-	st.Set(key, l)
+	st.Set(s, l)
 }
 
 // NewSignatureHashMap initializes a new SignatureHashMap so that
